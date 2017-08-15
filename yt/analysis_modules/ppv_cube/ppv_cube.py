@@ -264,9 +264,9 @@ class PPVCube(object):
         Parameters
         ----------
         filename : string
-            The name of the file to write to. 
+            The name of the file to write to.
         clobber : boolean, optional
-            Whether to overwrite a file with the same name that already 
+            Whether to overwrite a file with the same name that already
             exists. Default False.
         length_unit : string, optional
             The units to convert the coordinates to in the file.
@@ -279,7 +279,7 @@ class PPVCube(object):
 
         Examples
         --------
-        >>> cube.write_fits("my_cube.fits", clobber=False, 
+        >>> cube.write_fits("my_cube.fits", clobber=False,
         ...                 sky_scale=(1.0,"arcsec/kpc"), sky_center=(30.,45.))
         """
         vunit = fits_info[self.axis_type][0]
@@ -322,7 +322,10 @@ class PPVCube(object):
     def _create_intensity(self):
         def _intensity(field, data):
             v = self.current_v-data["v_los"].in_cgs().v
-            T = (data["temperature"]).in_cgs().v
+            if self.thermal_broad:
+                T = (data["temperature"]).in_cgs().v
+            else:
+                T = np.array([])
             w = ppv_utils.compute_weight(self.thermal_broad, self.dv_cgs,
                                          self.particle_mass, v.flatten(), T.flatten())
             w[np.isnan(w)] = 0.0
