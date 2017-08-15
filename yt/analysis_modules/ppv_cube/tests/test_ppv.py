@@ -58,8 +58,6 @@ def test_ppv():
 
     c = dE*np.exp(-((cube.vmid-E_shift)/delta_E)**2)/(np.sqrt(np.pi)*delta_E)
 
-    return cube
-
     assert_allclose_units(a, c, 1.0e-2)
 
 
